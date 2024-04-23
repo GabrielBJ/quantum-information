@@ -1,0 +1,163 @@
+% \documentclass[fleqn,10pt]{wlscirep}
+\documentclass[prx,twocolumn,floatfix,superscriptaddress,longbibliography]{revtex4-1}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{subfiles}
+\usepackage{mathtools}
+\usetikzlibrary{shapes,arrows,positioning}
+\usepackage{standalone}
+\usepackage{amssymb,amsmath,amstext}
+\usepackage{amsthm}
+\usepackage{bbm}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{color}
+\usepackage{appendix}
+\usepackage[T1]{fontenc}
+\usepackage{bbold}
+\usepackage{bbm}
+\usepackage{float}
+\usepackage{latexsym}
+\usepackage{xr-hyper}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=magenta]{hyperref}
+\usetikzlibrary{quantikz2}
+\usepackage{braket}
+\usepackage{physics}
+\usepackage{algpseudocode}
+\usepackage{placeins}
+\usepackage{multirow}
+\usepackage{booktabs}
+\graphicspath{{./Figures/}}
+%\usepackage[latin1]{inputenc}
+%\usepackage{hyphenat}
+
+\usepackage{hhline}
+\bibliographystyle{apsrev4-2}
+\def\bibsection{\section{\refname}} 
+\usetikzlibrary{shapes,arrows}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}  % Bold vectors instead of arrow vectors
+%\newcommand{\<}{\langle}
+%\renewcommand{\>}{\rangle}
+
+\long\def\ca#1\cb{} %Use for commenting out: \ca...\cb
+
+\def\cites#1{XXX Need citation #1 XX}
+
+\begin{document}
+
+\title{Quantum Algorithms for Portflolio Optimisation in Finance}
+
+\author{G. Balarezo}
+\thanks{e-mail: juan.balarezo@yachaytech.edu.ec}
+\affiliation{School of Physical Sciences and Nanotechnology,\\ Yachay Tech University,\\Urcuqui, Ecuador}
+
+
+\begin{abstract}
+Quantum computing has the promise to address computational problems that are considered intractable with our classical computational models. Nevertheless, due to the current limitations of the available quantum hardware, we are still years away from achieving a universal fault-tolerant quantum computer. In the interim, the development of quantum algorithms for specific problems and their implementation on near-term quantum devices is a promising approach. In this work, we review the most promising quantum algorithms for financial applications, focusing on Portfolio Optimisation and Option Pricing. We describe the ideas behind important quantum algorithms such as Variational Quantum Algorithms (VQAs) and Quantum Amplitude Estimation (QAE) and their theoretical performance. We provide an overview of the hardware available for their implementation and discuss the results 
+obtained by some study cases, comparing them with their classical counterparts. Finally, we discuss the future prospects of these algorithms in the financial industry.
+  \\
+  \textbf{Keywords:} Quantum algorithms, Quantum approximate optimization algorithm, Quantum amplitude estimation, Portfolio optimisation, Quantum computing.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Quantum computing has become a rapidly growing field of research in recent years, sparking interest from both academic and industrial sectors, including the financial industry in particular \cite{Hassija2020}. The potential of quantum computers to address computational problems that are considered intractable with our classical models of computation \cite{nielsen2010quantum} has driven a considerable amount of research and innovation in the development of Noisy Intermediate-Scale Quantum computers (NISQ) and quantum algorithms capable of leveraging this computational power \cite{Huang2023}. 
+
+These near-term devices, with limited qubit capabilities and high error rates, have shown promising results. Implemented along with classical computers and adequate quantum algorithms, they can offer significant speedups for some important but classically inefficiently solvable problems in areas such as Optimisation \cite{Symons2023}, Stochastic Modelling \cite{Herbert2022}, and Machine Learning \cite{Zeguendry2023}. These advancements are particularly relevant to the financial sector \cite{Egger2020a}, where they could yield substantial speedups in tasks such as portfolio optimisation and option pricing \cite{Hassija2020}. These tasks have a high 
+computational cost that coupled with growing complexity of the financial markets, the need for real-time analysis of large amounts of data and fast decision-making \cite{book:2139036}, makes quantum computing 
+an attractive option for financial institutions. 
+
+In the Modern Portfolio Theory proposed by Markowistz \cite{Wilmott2007}, the goal of portfolio optimisation is to find the best combination of assets that maximises the return for a given level of risk and some constraints. This is a highly constrained quadratic optimisation problem which can be formulated in several ways depending on the conditions of the 
+investor \cite{Herman2022}. Machine Learning based models (ML) such as the one proposed by Mazumdar et al. \cite{Mazumdar2020} are widely used for minimising risk contributors and maximising asset diversification.
+
+In particular, quantum approaches to portfolio optimisation are gaining significant attention \cite{Quarterly2020}. In 2019 Kerenidis, Prakash and Szilágyi proposed a quantum algorithm for the constrained portfolio optimisation problem. Based on an interior point method, this algorithm reduces the optimisation problem to a second order cone program (SOCP). The authors suggest that their algorithm could achieve a $\mathcal{O} (n)$ speedup over  its classical counterpart.
+
+Other approaches such as the variational quantum algorithms (VQAs) \cite{Yuan2019, Cerezo2021, McClean2016, Amaro2022} work by reformulating the portfolio optimisation problem as a 
+quadratic unconstrained binary optimisation (QUBO) problem. Glover et al. \cite{Glover2019} covers some methods to reformulate any optimisation problem as a QUBO problem, and Date et al. \cite{Date2019} proposed an algorithm that allows the efficient embedding of a QUBO problem in a quantum annealer.  Using these concepts, Variational Quantum 
+Eigensolver (VQE) \cite{Huang2023, McClean2016, Peruzzo2014, Barkoutsos2020} and Quantum Approximate Optimisation Algorithm (QAOA) \cite{Farhi2014, Blekos2024} have been proposed for portfolio optimisation \cite{Egger2020}. Quantum annealers such as those developed by D-Wave Systems \cite{King2023} are been used for practical implementations of the aforementioned algorithms
+\cite{Phillipson2020, Venturelli2019}. Nevertheless, it remains unclear whether these quantum algorithms provide any effective speedup over classical methods for these tasks.
+
+Option pricing is another important task in finance where quantum algorithms have been applied. The implementation of the
+Quantum Amplitude Estimation (QAE) algorithm \cite{Woerner2019, Nakaji2020, Stamatopoulos2020} has been proposed for the calculation of the expected value of the option price. This algorithm is
+expected to provide a quadratic speedup over the classical Monte Carlo methods used for this task. 
+
+The aim of this work is to provide a review of the quantum algorithms for specific financial applications, focusing on Portfolio Optimisation and Option Pricing. Table \ref{Tab:paper_overview} provides an overview of the topics covered in this work, as well as the relevant literature reviewed. 
+
+In Sec. \ref{sec:background} we introduce necessary concepts in finance and quantum computing. Then, in Sec. \ref{sec:literature1} and Sec. \ref{sec:literature2}  we present a review of relevant literature on quantum algorithms proposed for the aforementioned financial applications. We also 
+  introduce the classical methods used for these tasks and compare them with their quantum counterparts.
+
+In Sec. \ref{sec:hardware} we provide an overview of the hardware implementations of these algorithms. Finally, Sec. \ref{sec:discussion} concludes this work and discusses the future prospects of quantum algorithms in the financial industry.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table*}[t!] 
+  \begin{center}
+    \caption{\label{Tab:paper_overview} Criteria for the selection of the papers reviewed in this work.}
+    \begin{tabular}{c|c|c|c} \hline \hline
+\textbf{Metodology} &
+  \textbf{Application} &
+  \textbf{Algorithm} &
+  \textbf{Hardware} \\ \hline
+Optimisation &
+  \begin{tabular}[c]{@{}c@{}}Portfolio \\ optimisation\end{tabular} &
+    \begin{tabular}[c]{@{}c@{}}Approximate \\ Optimisation\\ (SOCP, VQE, QAOA) \\
+    \cite{Mazumdar2020}, \cite{Venturelli2019}, \cite{Phillipson2020}, \cite{Rebentrost2018a}  \end{tabular} &
+  \begin{tabular}[c]{@{}c@{}}Gate-based quantum computer \\ Quantum Annealer\end{tabular} \\ \hline  
+    %\multicolumn{1}{}{  Gate-based quantum computer \\ Quantum Annealer} \\ \hline
+Monte Carlo &
+  \multicolumn{1}{l|}{\begin{tabular}[c]{@{}l@{}}Option pricing \end{tabular}} &
+  \begin{tabular}[c]{@{}c@{}}Search and Count\\ (QAE, QPA, QPE) \\ 
+  \cite{Nakaji2020},\cite{Woerner2019}, \cite{Stamatopoulos2020}, \cite{Rebentrost2022} \cite{Rebentrost2018} \end{tabular} &
+\begin{tabular}[c]{@{}c@{}} Gate-based quantum \\ computer\end{tabular} \\ \hline \hline
+\end{tabular}
+\end{center}
+\end{table*}
+
+
+\section{background}\label{sec:background}
+
+
+
+\subsection{Some basics concepts}
+
+\subsubsection{Assets and Portfolio Optimisation}
+
+\subsubsection{Option Pricing}
+
+\subsubsection{Quantum Computing}
+
+
+\section{Portfolio Optimisation}\label{sec:literature1}
+
+
+
+\subsection{Classical Portfolio Optimisation}
+
+\subsection{Quantum Portfolio Optimisation}
+
+
+\section{Option Pricing}\label{sec:literature2}
+
+\subsection{Classical Option Pricing}
+
+\subsection{Quantum Option Pricing}
+
+
+\section{Hardware Implementations}\label{sec:hardware}
+
+
+
+
+\section{Discussion and Conclusion}\label{sec:discussion}
+
+
+
+\FloatBarrier
+
+\bibliography{./references-2.bib}
+
+\end{document} 

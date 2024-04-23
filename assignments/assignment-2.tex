@@ -1,0 +1,219 @@
+\documentclass[12 pt]{article}
+
+% Packages for mathematical symbols and equations
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{setspace}
+\usepackage{acro}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{../../../tex-packages/physics}
+\usepackage{../../../tex-packages/qcircuit}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{cancel}
+\usepackage{empheq}
+\usepackage{tikz}
+\usepackage{color}
+\usepackage[english]{babel}
+\usepackage{bbold}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{adjustbox}
+\usepackage{float}
+%\numberwithin{equation}{section}
+\usepackage{bm}
+\usepackage{wrapfig}
+\usepackage{relsize}
+\usepackage[letterpaper ,top=1in,bottom=1in,left=1in,right=1in,marginparwidth=1.75cm]{geometry}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
+    decorations.pathreplacing,decorations.pathmorphing,shapes,%
+    matrix,shapes.symbols}
+\include{acronyms}
+%\geometry{top=1.3in,bottom=1.3in}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+  urlcolor=black}
+
+
+
+% Set page margins
+
+\title{Quantum Computation and Quantum Information\\
+Assignment 2}
+\author{Gabriel Balarezo}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{mdframed}[backgroundcolor = gray!30,
+  frametitle = Exercise 1.2]
+  Explain how a device which, upon input of one of two non-orthogonal quantum states $\ket{\psi}$ and $\ket{\varphi}$ correctly identified the state, could be used to build a device which cloned the states $\ket{\psi}$ and $\ket{\varphi}$, in violation of the non-cloning theorem. Conversely, explain how a device for cloning could be used to distinguish non-orthogonal quantum states.
+\end{mdframed}
+
+Given a device that can distinguish between non-orthogonal states $\ket{\psi}$ and $\ket{\varphi}$ (without measurement), we can then design a quantum circuit
+that clones the states $\ket{\psi}$ and $\ket{\varphi}$ as we like.\\ 
+First, let's define the non-orthogonal states $\ket{\psi}$ and $\ket{\varphi}$ as follows:
+\begin{align}
+  \ket{\psi} & \in \{\ket{\psi_+}, \ket{\psi_-}\} \\
+  \ket{\varphi} & \in \{\ket{\varphi_+}, \ket{\varphi_-}\}
+\end{align}
+then, there exists a single-qubit operator, i.e. a rotation such that:
+
+\begin{align*}
+  U(\phi, \theta) \ket{\psi_+} = \ket{0} \\
+  U(\phi, \theta)\ket{\psi_-} = \ket{1} \\
+  U(\phi, \theta)\ket{\varphi_+} = \ket{0} \\
+  U(\varphi, \theta)\ket{\varphi_-} = \ket{1}
+\end{align*}
+and 
+\begin{align*}
+  U^{-1}(\phi, \theta) \ket{0} = \ket{\psi_+} \\
+  U^{-1}(\phi, \theta)\ket{1} = \ket{\psi_-} \\
+  U^{-1}(\phi, \theta)\ket{0} = \ket{\varphi_+} \\
+  U^{-1}(\varphi, \theta)\ket{1} = \ket{\varphi_-}
+\end{align*}
+Now, we can define a rotation from
+
+\[\ket{0} \quad \text{to} \quad \cos\left(\frac{\phi}{2} \right) \ket{0} + \sin\left(\frac{\phi}{2} \right) e^{i \theta} \ket{1}  = \ket{\psi_+}\]
+and from
+\[\ket{1} \quad \text{to} \quad \sin\left(\frac{\phi}{2} \right) \ket{0} + \cos\left(\frac{\phi}{2} \right) e^{i \theta} \ket{1}  = \ket{\psi_-}\]
+as follows:
+\begin{equation}
+  U(\phi, \theta) = 
+  \begin{pmatrix}
+  e^{i\theta/2} & 0 \\
+  0 & e^{-i\theta/2}
+  \end{pmatrix} 
+  \begin{pmatrix}
+  \cos\left(\frac{\phi}{2} \right) & \sin\left(\frac{\phi}{2} \right) \\
+  \sin\left(\frac{\phi}{2} \right) & -\cos\left(\frac{\phi}{2} \right)
+  \end{pmatrix}
+\end{equation}
+and the inverse transformation is given by
+\begin{equation}
+  U^{-1}(\phi, \theta) = 
+   \begin{pmatrix}
+  e^{-i\theta/2} & 0 \\
+  0 & e^{i\theta/2}
+  \end{pmatrix}
+  \begin{pmatrix}
+  \cos\left(\frac{\phi}{2} \right) & \sin\left(\frac{\phi}{2} \right) \\
+  \sin\left(\frac{\phi}{2} \right) & -\cos\left(\frac{\phi}{2} \right)
+  \end{pmatrix} 
+\end{equation}
+Now, we can define a quantum circuit that clones the states $\ket{\psi}$ and $\ket{\varphi}$ as follows:
+\begin{align*}
+  \Qcircuit @C=1em @R=1em {
+    & \lstick{\ket{\psi_{\pm}}} & \gate{U(\phi, \theta)} & \ctrl{1}
+    & \gate{U^{-1}(\phi, \theta)} & \qw & \rstick{\ket{\psi_{\pm}}} \\
+    & \lstick{\ket{0}} & \qw & \targ
+    & \gate{U^{-1}(\phi, \theta)} & \qw & \rstick{\ket{\psi_{\pm}}}
+  }
+\end{align*}
+The same follows for the state $\ket{\varphi}$.\\
+
+So far we have shown that a device that can distinguish between non-orthogonal states $\ket{\psi}$ and $\ket{\varphi}$ can be used to build a device that clones the states $\ket{\psi}$ and $\ket{\varphi}$. But for this we need to know if our qubit is in either 
+$\ket{\psi}$ or $\ket{\varphi}$, so we can plug the correct phase and angle into the rotation operator, which is 
+in contradiction with the non-cloning theorem.\\
+
+Conversely, given the aforementioned cloning circuit, we can use it to distinguish between non-orthogonal states $\ket{\psi}$ and $\ket{\varphi}$ by
+
+\begin{enumerate}
+  \item Making n copies of our unknown state $\ket{\chi}$ which is either $\ket{\psi}$ or $\ket{\varphi}$. 
+  \item Measuring the $\ket{\chi}$ state in the computational basis $\ket{\psi_{\pm}}$, i.e $\bra{\psi}\ket{\chi}$.
+\end{enumerate}
+if $\ket{\chi} = \ket{\psi}$, then the outcome is 1, and if $\ket{\chi} = \ket{\varphi}$, then the outcome is $\bra{\psi}\ket{\varphi}$.
+
+\[
+\text{Probability} \quad | \bra{\psi}\ket{\psi} |^2 = 1 \quad \text{and probability} \quad | \bra{\psi}\ket{\varphi} |^2 < 1
+\]
+Let $|\bra{\chi}\ket{\varphi}|^2 = p$, then the probability of measuring an overlap for n measurements of $\bra{\psi}\ket{\phi}$ is  
+\[
+p^n  = |\bra{\chi}\ket{\varphi}|^{2n}
+\]
+for example, $\displaystyle{\left \{ \ket{0}, \frac{\ket{0} + \ket{1}}{\sqrt{2}} \right\}}$
+\[
+p = \left| \bra{0} \left( \frac{\ket{0} + \ket{1}}{\sqrt{2}} \right) \right|^2 = \frac{1}{2}
+\]
+\[
+p^n = \left( \frac{1}{2} \right)^n, \quad \text{and for four measurements} \quad p^4 = \left( \frac{1}{2} \right)^4 = \frac{1}{16}
+\]
+So we can see that as long as we can make n copies of the state $\ket{\chi}$, we can distinguish between non-orthogonal states $\ket{\psi}$ and $\ket{\varphi}$.\\
+
+Even if $\ket{\psi}\sim \ket{\varphi}$, we can still distinguish between them by making enough n copies of the state $\ket{\chi}$ and measuring them in the appropriate 
+basis.\\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

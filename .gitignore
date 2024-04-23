@@ -1,0 +1,15 @@
+
+
+assignments/*.aux
+assignments/*.log
+assignments/*.out
+assignments/*.fdb_latexmk
+assignments/*.fls
+assignments/*.synctex.gz
+
+
+project/*.txt
+project/*.bbl
+project/paper-v2Notes.bib
+project/*.synctex.gz
+
