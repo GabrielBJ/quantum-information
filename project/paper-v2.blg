@@ -1,0 +1,66 @@
+This is BibTeX, Version 0.99d (TeX Live 2024)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: paper-v2.aux
+The style file: apsrev4-2.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: paper-v2Notes.bib
+Database file #2: /home/pacman/Documents/Ninth-Semester/quantum-information/lecture-notes/references-2.bib
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+apsrev4-2.bst 2019-01-14 (MD) hand-edited version of apsrev4-1.bst
+Control: key (0) 
+Control: author (72) initials jnrlst
+Control: editor formatted (1) identically to author
+Control: production of article title (-1) disabled
+Control: page (0) single
+Control: year (1) truncated
+Control: production of eprint (0) enabled
+You've used 32 entries,
+            6079 wiz_defined-function locations,
+            1890 strings with 22674 characters,
+and the built_in function-call counts, 37981 in all, are:
+= -- 2335
+> -- 1296
+< -- 224
++ -- 411
+- -- 328
+* -- 6379
+:= -- 3446
+add.period$ -- 32
+call.type$ -- 32
+change.case$ -- 138
+chr.to.int$ -- 40
+cite$ -- 32
+duplicate$ -- 3399
+empty$ -- 2623
+format.name$ -- 752
+if$ -- 7663
+int.to.chr$ -- 2
+int.to.str$ -- 40
+missing$ -- 467
+newline$ -- 148
+num.names$ -- 96
+pop$ -- 1286
+preamble$ -- 1
+purify$ -- 160
+quote$ -- 0
+skip$ -- 1448
+stack$ -- 0
+substring$ -- 651
+swap$ -- 3470
+text.length$ -- 164
+text.prefix$ -- 0
+top$ -- 8
+type$ -- 513
+warning$ -- 0
+while$ -- 86
+width$ -- 0
+write$ -- 311

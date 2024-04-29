@@ -13,3 +13,26 @@ project/*.bbl
 project/paper-v2Notes.bib
 project/*.synctex.gz
 
+material/
+
+lecture-notes/*.bst
+lecture-notes/*.aux
+lecture-notes/*.bbl
+lecture-notes/*.blg
+lecture-notes/*.fdb_latexmk
+lecture-notes/*.fls
+lecture-notes/*.log
+lecture-notes/*.out
+lecture-notes/*.synctex.gz
+lecture-notes/*.toc
+lecture-notes/*.bib
+
+fig-files/notes-figs/main-figure.svg
+fig-files/notes-figs/main-figure.svg.2024_03_02_18_42_09.0.svg
+fig-files/paper-figs/drawing.svg
+fig-files/figures.ipynb
+
+datasets/
+
+
+
