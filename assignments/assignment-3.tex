@@ -1,6 +1,7 @@
 \documentclass[12 pt]{article}
 
 % Packages for mathematical symbols and equations
+\usepackage[numbers]{natbib}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{listings}
@@ -45,7 +46,7 @@
   urlcolor=black}
 
 
-
+\bibliographystyle{apsrev4-2}
 % Set page margins
 
 \title{Quantum Computation and Quantum Information\\
@@ -62,30 +63,61 @@ Assignment 3}
   Suppose $U$ is a single-qubit unitary operation. Find a circuit containing $\mathcal{O}(n^2)$ Toffoli, CNOT and single qubit gates which implements a $C^n (U)$ gate (for $n>3$), using no work qubits. 
 \end{mdframed}
 
+So, the circuit we want to implement is the following:
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{x_1}$} &  & \ctrl{1} &\\ 
+    \lstick{$\ket{x_2}$} &  & \ctrl{1} & \\
+    \lstick{$\ket{x_3}$} &  & \ctrl{2} & \\
+    \vdots \\
+    \lstick{$\ket{x_n}$} &  & \ctrl{1} & \\
+    \lstick{$\ket{\psi}$} &  & \gate{U} &
+    \end{quantikz}
+\end{equation*}
+
+For this, we will Lemma 6.1 from Ref. \cite{Barenco_1995}, which states that for any unitary $2\times 2$ matrix $U$, a $C^2(U)$ gate can be simulated by the following 
+circuit:
+
+\begin{equation*}
+  \begin{quantikz}
+    & \ctrl{1} & \midstick[3, brackets = none]{=} & & \ctrl{1} & & \ctrl{1} & \ctrl{2} &\\ 
+    & \ctrl{1} & & \ctrl{1} & \targ{} & \ctrl{1} & \targ{} & &  \\
+    & \gate{U} & & \gate{U^{1/2}} &         & \gate{(U^{1/2})^\dagger} &  & \gate{U^{1/2}} &
+    \end{quantikz}
+\end{equation*}
+
+Proof of this lemma can be found in the same reference.\\
+
+A generalisation of Lemma 6.1 can be found in Lemma 7.5 of the same reference, which states that for any unitary $2\times 2$ matrix $U$, a $C^{n-1}(U)$ gate can be simulated by the following circuit (illustrated for $n = 9$)
+
+\begin{equation*} 
+  \begin{quantikz}
+    & \ctrl{1} & \midstick[10, brackets = none]{=} & & \ctrl{1} & & \ctrl{1} & \ctrl{1} &\\
+    & \ctrl{1} &                                  & & \ctrl{1} & & \ctrl{1} & \ctrl{1} &\\ 
+    & \ctrl{1} &                                  & & \ctrl{1} & & \ctrl{1} & \ctrl{1} &\\ 
+    & \ctrl{1} &                                  & & \ctrl{1} & & \ctrl{1} & \ctrl{1} &\\ 
+    & \ctrl{1} &                                  & & \ctrl{1} & & \ctrl{1} & \ctrl{1} &\\
+    & \ctrl{1} &                                  & & \ctrl{1} & & \ctrl{1} & \ctrl{1} &\\ 
+    & \ctrl{1} &                                  & & \ctrl{1} & & \ctrl{1} & \ctrl{1} &\\  
+    & \ctrl{1} &                                  & & \ctrl{1} & & \ctrl{1} & \ctrl{2} &\\ 
+    & \ctrl{1} &                                  &\ctrl{1}&\targ{}&\ctrl{1}&\targ{}& &\\ 
+    & \gate{U} &                                  &\gate{V}&       &\gate{V^\dagger}&       & \gate{V} &
+  \end{quantikz}
+\end{equation*}
+
+given $V$ a unitary matrix such that $V^2 = U$. Another version of this implementation can be found in Ref. \cite{liu2007analytic}
+
+What we want to show is that the circuit above can be implemented using $\mathcal{O}(n^2)$ basic operations.   
+
+We can notice that this circuit is a recursive implementation of Lemma 7.5. Let $C_{n-1}$ denote the cost of implementing a $C^{n-1}(U)$. We can also notice that the cost of applying $C^{1}(V)$ and $C^{1}(V^\dagger)$ gates is $\mathcal{O}(1)$. Corollary 7.4 from Ref.\cite{Barenco_1995} states that for an n-bit circuit (for $n\geq 7$), a $C^{n-2}(X)$ gate can be simulated using $\mathcal{O}(n)$ basic operations. The cost of implementing $C^{n-2}(V)$ gate is $C_{n-2}$ (by recursion). 
+This implies that the cost of implementing the circuit above is $C_{n-1} = C_{n-2} + \mathcal{O}(n)$. This is a linear recurrence relation, and its solution is $C_{n-1} = \mathcal{O}(n^2)$.\\
 
 
 
+Note: Illustrations were made using the package \texttt{quantikz2}. 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\bibliography{/home/pacman/Documents/git-repositories/quantum-computing/lecture-notes/references-2.bib}
 
 \end{document}
 
