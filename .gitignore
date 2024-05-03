@@ -6,6 +6,9 @@ assignments/*.out
 assignments/*.fdb_latexmk
 assignments/*.fls
 assignments/*.synctex.gz
+assignments/*.blg
+assignments/*.bbl
+assignments/*.toc
 
 
 project/*.txt
