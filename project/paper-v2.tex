@@ -71,7 +71,7 @@ These near-term devices, with limited qubit capabilities and high error rates, h
 computational cost that coupled with growing complexity of the financial markets, the need for real-time analysis of large amounts of data and fast decision-making \cite{book:2139036}, makes quantum computing 
 an attractive option for financial institutions. 
 
-In the Modern Portfolio Theory proposed by Markowistz \cite{Wilmott2007}, the goal of portfolio optimisation is to find the best combination of assets that maximises the return for a given level of risk and some constraints. This is a highly constrained quadratic optimisation problem which can be formulated in several ways depending on the conditions of the 
+In the Modern Portfolio Theory proposed by Markowistz \cite{Wilmott2007}, the goal of portfolio optimisation is to find the best combination of assets that maximises the return for a given level of risk and some constraints. This is a highly constrained quadratic optimisation problem, known to be NP-Hard, which can be formulated in several ways depending on the conditions of the 
 investor \cite{Herman2022}. Machine Learning based models (ML) such as the one proposed by Mazumdar et al. \cite{Mazumdar2020} are widely used for minimising risk contributors and maximising asset diversification.
 
 In particular, quantum approaches to portfolio optimisation are gaining significant attention \cite{Quarterly2020}. In 2019 Kerenidis, Prakash and Szilágyi proposed a quantum algorithm for the constrained portfolio optimisation problem. Based on an interior point method, this algorithm reduces the optimisation problem to a second order cone program (SOCP). The authors suggest that their algorithm could achieve a $\mathcal{O} (n)$ speedup over  its classical counterpart.
@@ -112,15 +112,13 @@ Monte Carlo &
 
 The aim of this work is to provide a review of the quantum algorithms for specific financial applications, focusing on Portfolio Optimisation and Option Pricing. Table \ref{Tab:paper_overview} provides an overview of the topics covered in this work, as well as the relevant literature reviewed. 
 
-Important surveys 
-
 In Sec. \ref{sec:background} we introduce necessary concepts in finance and quantum computing. Then, in Sec. \ref{sec:literature1} and Sec. \ref{sec:literature2}  we present a review of relevant literature on quantum algorithms proposed for the aforementioned financial applications. We also 
   introduce the classical methods used for these tasks and compare them with their quantum counterparts.
 
-In Sec. \ref{sec:hardware} we provide an overview of the hardware implementations of these algorithms. Finally, Sec. \ref{sec:discussion} concludes this work and discusses the future prospects of quantum algorithms in the financial industry. \cite{Casares2024}
+In Sec. \ref{sec:hardware} we provide an overview of the hardware implementations of these algorithms. Finally, Sec. \ref{sec:discussion} concludes this work and discusses the future prospects of quantum algorithms in the financial industry. 
 
-
-
+Although this work is focused on two financial applications, the quantum algorithms reviewed here can be applied to a wide range of financial problems. In recent years, important surveys have been published on the topic of quantum computing in finance \cite{Orus2019,Egger2020a,Albareti2022,Herman2022,Herman2023} 
+and we refer the interested readers to these works for a more comprehensive overview of the field.
 
 \section{background}\label{sec:background}
 
