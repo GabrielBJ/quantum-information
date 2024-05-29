@@ -133,41 +133,51 @@ used used in the financial industry to this day, and whose formulation is presen
 The input for the MVPO is data about the historical prices and return of certain financial assets. An asset range $(1 \leq i \leq N)$ is considered, and a time range $(0 \leq t \leq T)$. 
 
 Then, the first information we extract from the data is a list $P$ of current prices $P_i$  of the considered assets.
-
 \begin{equation}
   \label{eq:1}
   P_i = p_i(T)
 \end{equation}
-
 In addition, the historical returns of the assets between time $t-1$ and $t$ are calculated as:
-
 \begin{equation}
   \label{eq:2}
   r_i(t) = \frac{p_i(t) - p_i(t-1)}{p_i(t-1)}
 \end{equation}
-
 But for inference purposes, we must consider the expected return of the assets. So, given the historical returns, we can calculate the expected return of the assets as:
-
 \begin{equation}
   \label{eq:3}
   \mu_i = \frac{1}{T} \sum_{t=1}^{T} r_i(t)
 \end{equation}
-
 The variance of the returns of each asset and the covariance between returns of different assets over the historical period are given by:
-
 \begin{equation}
   \label{eq:4}
   \sigma_i^2 = \frac{1}{T-1} \sum_{t=1}^{T} (r_i(t) - \mu_i)^2
 \end{equation}
-
 \begin{equation}
   \label{eq:5}
   \sigma_{ij} = \frac{1}{T-1} \sum_{t=1}^{T} (r_i(t) - \mu_i)(r_j(t) - \mu_j)
 \end{equation}
+A set of investments $x_i$ (given as a fraction of the total budget or number of asset units) allocated for each $i$th considered asset, 
+is then defined. Therefore, an optimal method for asset allocation aims to maximise the portfolio return 
+$\mu^\text{T} x$ while minimising risk, defined as the portfolio variance $x^\text{T}\Sigma x$, where $\mu$ is the vector of expected returns for each asset $i$ computed by Eq. \ref{eq:3}, $\Sigma$ is the covariance matrix calculate byt Eq. \ref{eq:4} and Eq. \ref{eq:5}, and $x$ is the vector 
+of asset allocations measured as fractions of the total budget. Therefore, the problem of finding the optimal portfolio is reduced to find the $x$ vector that maximises the following objective function: 
+\begin{equation}
+  \label{eq:6}
+  \mathcal{L}(x) = \mu^\text{T} x - q x^\text{T}\Sigma x
+\end{equation}
+where $q$ is a parameter that determines the trade-off between risk and return.  In a realistic scenario, budget constraints and non-negative 
+$x_i$ values (only buying) must be considered. Therefore, in the general case, the problem is formulated as follows:
+\begin{equation}
+\begin{aligned}
+  \label{eq:7}
+  \max_{x} \mathcal{L}(x): & \max_{x}\left(\mu^\text{T} x - q x^\text{T}\Sigma x \right) \\ 
+  \text{s.t.} & \quad \sum_{i=1}^{N} x_i = 1 
+\end{aligned}
+\end{equation}
+In section \ref{sec:literature1} we will review how this problem can be mapped into a QUBO problem and solved using quantum algorithms.
 
 \subsubsection{Option Pricing}
 
-
+An option is finan
 
 \subsubsection{Quantum Computing}
 
