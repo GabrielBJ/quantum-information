@@ -111,7 +111,7 @@ expected to provide a quadratic speedup over the classical Monte Carlo methods u
 
 The aim of this work is to provide a review of the quantum algorithms for specific financial applications, focusing on Portfolio Optimisation and Option Pricing. Table \ref{Tab:paper_overview} provides an overview of the topics covered in this work, as well as the relevant literature reviewed. 
 
-In Sec. \ref{sec:background} we introduce necessary concepts in finance and quantum computing. Then, in Sec. \ref{sec:literature1} and Sec. \ref{sec:literature2}  we present a review of relevant literature on quantum algorithms proposed for the aforementioned financial applications. We also 
+In Sec. \ref{sec:background} we introduce necessary concepts in finance and quantum algorithms. Then, in Sec. \ref{sec:literature1} and Sec. \ref{sec:literature2}  we present a review of relevant literature on quantum algorithms proposed for the aforementioned financial applications. We also 
   introduce the classical methods used for these tasks and compare them with their quantum counterparts.
 
 In Sec. \ref{sec:hardware} we provide an overview of the hardware implementations of these algorithms. Finally, Sec. \ref{sec:discussion} concludes this work and discusses the future prospects of quantum algorithms in the financial industry. 
@@ -122,15 +122,15 @@ It is worth mentioning that important surveys have been published on the topic o
 \subsection{Some basics concepts}
 \subsubsection{Assets and Portfolio Optimisation}
 
-In finance, an asset is a financial instrument with economic value. It can be owned by an individual, a corporation, or a country with the expectation that it will provide a future benefit \cite{zotero-1119}. Financial assets can include stocks, bonds, commodities, derivatives, etc. 
+In finance, an asset is a financial instrument that can be owned by an individual, a corporation, or a country with the expectation that it will provide a future benefit \cite{2023}. Financial assets can include stocks, bonds, commodities, derivatives, etc. 
 
-On the other hand, a portfolio is a collection of individual investments. These investments can include a wide range of asset classes. Some key components of a portfolio include diversification, risk and return, and asset allocation. The goal of a portfolio is to diversify investments to achieve some specific objective such as maximising returns, minimising risk, or a balance between them \cite{Wilmott2007}. 
+On the other hand, a portfolio is a collection of individual investment that can include a wide range of asset classes. Some key components of a portfolio include diversification, risk and return, and asset allocation. The goal of a portfolio is to diversify investments to achieve some specific objective such as maximising returns, minimising risk, or a balance between them \cite{Wilmott2007}. 
 In order to achieve this, portfolio optimisation is used to find the best allocation of assets that fulfils the investor's objectives.
 
 In the original work by Markowitz \cite{Markowitz1952}, a mean-variance portfolio optimisation (MVPO) is proposed, which is widely 
 used used in the financial industry to this day, and whose formulation is presented in this section.
 
-The input for the MVPO is data about the historical prices and return of certain financial assets. An asset range $(1 \leq i \leq N)$ is considered, and a time range $(0 \leq t \leq T)$. 
+The input for the MVPO is data about the historical prices and returns of certain financial assets. An asset range $(1 \leq i \leq N)$ is considered, and a time range $(0 \leq t \leq T)$. 
 
 Then, the first information we extract from the data is a list $P$ of current prices $P_i$  of the considered assets.
 \begin{equation}
@@ -158,7 +158,7 @@ The variance of the returns of each asset and the covariance between returns of 
 \end{equation}
 A set of investments $x_i$ (given as a fraction of the total budget or number of asset units) allocated for each $i$th considered asset, 
 is then defined. Therefore, an optimal method for asset allocation aims to maximise the portfolio return 
-$\mu^\text{T} x$ while minimising risk, defined as the portfolio variance $x^\text{T}\Sigma x$, where $\mu$ is the vector of expected returns for each asset $i$ computed by Eq. \ref{eq:3}, $\Sigma$ is the covariance matrix calculate byt Eq. \ref{eq:4} and Eq. \ref{eq:5}, and $x$ is the vector 
+$\mu^\text{T} x$ while minimising risk, defined as the portfolio variance $x^\text{T}\Sigma x$, where $\mu$ is the vector of expected returns for each asset $i$ computed by Eq. \ref{eq:3}, $\Sigma$ is the covariance matrix calculate by Eq. \ref{eq:4} and Eq. \ref{eq:5}, and $x$ is the vector 
 of asset allocations measured as fractions of the total budget. Therefore, the problem of finding the optimal portfolio is reduced to find the $x$ vector that maximises the following objective function: 
 \begin{equation}
   \label{eq:6}
@@ -176,10 +176,55 @@ $x_i$ values (only buying) must be considered. Therefore, in the general case, t
 In section \ref{sec:literature1} we will review how this problem can be mapped into a QUBO problem and solved using quantum algorithms.
 
 \subsubsection{Option Pricing}
+An option is a financial instrument that gives the holder the opportunity but not the obligation to buy or sell the  \textbf{underlying asset} at an agreed-upon price (\textbf{strike price}) at a specified time in the future (\textbf{expiration date}) \cite{Wilmott2007}. There are many kind of options, 
+but the most common are \textbf{call} and \textbf{put options} (buy and sell options, respectively). Furthermore, we must 
+differentiate between European and American options. The former can only be exercised at the expiration date, while the latter can be exercised at any time before the expiration date \cite{Rebentrost2018}. 
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{pay-off.pdf}
+  \caption{\label{fig:profit-diagram} Profit diagram for a call option. Adapted from \cite{Wilmott2007}.}
+\end{figure}
 
-An option is finan
+The profit diagram for a call option is shown in Fig. \ref{fig:profit-diagram}, where the \textbf{premium} is the price paid for contract initially. Then, the 
+intrinsic value of the option at the expiration date is calculated as the difference between the stock price $S$ and the strike price $E$. 
+This function of the underlying asset is called the \textbf{payoff function} and is given by:
+\begin{equation}
+  \label{eq:8}
+  \text{Payoff} = \max(S - E, 0)
+\end{equation}
+The goal of option pricing is to estimate the option payoff at the expiration date and then discount that value to determine the \textbf{fair value}, which indicates the amount of money an 
+investor should pay to enter the option contract today, given the current market conditions. 
+The challenging part is to compute the expected value of the option payoff, which is usually done using Monte Carlo methods. In section \ref{sec:literature2} we will review how this problem can be solved using quantum algorithms.
 
-\subsubsection{Quantum Computing}
+\subsubsection{Variational Quantum Algorithms}
+
+Variational Quantum Algorithms (VQAs) are hybrid quantum-classical algorithms that 
+laverage some quantum mechanical principles to solve optimisation problems. The main goal of a VQA is to find an approximate solution for optimisation and combinatorial problems \cite{Cerezo2021}. Having stated the optimisation problem, 
+we must map its cost function $C(\vec{\theta})$ to a Hamiltonian operator, whose ground state energy encodes the optimal solution.
+
+
+
+
+
+
+
+\begin{figure}[h!]
+\centering 
+\includegraphics[width=0.45\textwidth]{VQE-Egger.pdf}
+  \caption{\label{fig:vqe} Variational Quantum Eigensolver (VQE) algorithm.}
+\end{figure}
+
+One of this algorithms is the Variational Quantum Eigensolver 
+
+
+\begin{figure*}[ht!]
+  \begin{center} 
+  \includegraphics[width=\textwidth]{QAOA-Blekos.pdf}
+  \caption{\label{fig:qaoa} Quantum Approximate Optimisation Algorithm (QAOA) algorithm.}
+  \end{center}
+\end{figure*}
+
+\subsubsection{Quantum Amplitude Estimation}
 
 
 \section{Portfolio Optimisation}\label{sec:literature1}
