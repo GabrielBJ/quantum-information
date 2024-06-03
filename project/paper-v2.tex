@@ -34,7 +34,7 @@
 %\usepackage{hyphenat}
 
 \usepackage{hhline}
-\bibliographystyle{apsrev4-2}
+%\bibliographystyle{apsrev4-2}
 \def\bibsection{\section{\refname}} 
 \usetikzlibrary{shapes,arrows}
 \renewcommand{\vec}[1]{\boldsymbol{#1}}  % Bold vectors instead of arrow vectors
@@ -124,15 +124,14 @@ It is worth mentioning that important surveys have been published on the topic o
 
 In finance, an asset is a financial instrument that can be owned by an individual, a corporation, or a country with the expectation that it will provide a future benefit \cite{2023}. Financial assets can include stocks, bonds, commodities, derivatives, etc. 
 
-On the other hand, a portfolio is a collection of individual investment that can include a wide range of asset classes. Some key components of a portfolio include diversification, risk and return, and asset allocation. The goal of a portfolio is to diversify investments to achieve some specific objective such as maximising returns, minimising risk, or a balance between them \cite{Wilmott2007}. 
+On the other hand, a portfolio is a set of individual investments that may include a wide range of asset classes. A portfolio is characterised by components such as diversification, risk and return, and asset allocation. The main goal of a portfolio is to diversify investments to achieve some specific objective such as maximising returns, minimising risk, or a balance between them \cite{Wilmott2007}. 
 In order to achieve this, portfolio optimisation is used to find the best allocation of assets that fulfils the investor's objectives.
 
-In the original work by Markowitz \cite{Markowitz1952}, a mean-variance portfolio optimisation (MVPO) is proposed, which is widely 
-used used in the financial industry to this day, and whose formulation is presented in this section.
+In the original work by Markowitz \cite{Markowitz1952}, a mean-variance portfolio optimisation (MVPO) is proposed, which is widely used used in the financial industry to this day, and whose formulation is presented in this section.
 
-The input for the MVPO is data about the historical prices and returns of certain financial assets. An asset range $(1 \leq i \leq N)$ is considered, and a time range $(0 \leq t \leq T)$. 
+The input for the MVPO is the historical prices and returns of the considered financial assets. An asset range $(1 \leq i \leq N)$ is considered, and a time range $(0 \leq t \leq T)$. 
 
-Then, the first information we extract from the data is a list $P$ of current prices $P_i$  of the considered assets.
+Then, the first step is to obtain a list $P$ of current prices $P_i$  of the assets of interest.
 \begin{equation}
   \label{eq:1}
   P_i = p_i(T)
@@ -192,29 +191,24 @@ This function of the underlying asset is called the \textbf{payoff function} and
   \label{eq:8}
   \text{Payoff} = \max(S - E, 0)
 \end{equation}
-The goal of option pricing is to estimate the option payoff at the expiration date and then discount that value to determine the \textbf{fair value}, which indicates the amount of money an 
+The purpose of option pricing is to estimate the option payoff at the expiration date and then, determine the \textbf{fair value}, which indicates the amount of money an 
 investor should pay to enter the option contract today, given the current market conditions. 
 The challenging part is to compute the expected value of the option payoff, which is usually done using Monte Carlo methods. In section \ref{sec:literature2} we will review how this problem can be solved using quantum algorithms.
 
 \subsubsection{Variational Quantum Algorithms}
 
 Variational Quantum Algorithms (VQAs) are hybrid quantum-classical algorithms that 
-laverage some quantum mechanical principles to solve optimisation problems. The main goal of a VQA is to find an approximate solution for optimisation and combinatorial problems \cite{Cerezo2021}. Having stated the optimisation problem, 
-we must map its cost function $C(\vec{\theta})$ to a Hamiltonian operator, whose ground state energy encodes the optimal solution.
+are well suited for NISQ devices and allow us to get approximate solutions to optimisation and combinatorial problems efficiently \cite{Cerezo2021}. This algorithms rely on the fact that we can, in 
+principle, reformulate any optimisation problem as a QUBO problem \cite{Glover2019}.  
 
-
-
-
-
-
-
+QUBO problems can not directly be cast into a quantum computer, but they share a isomorphism with the Ising Hamiltonian, making it easy to map a QUBO problem into an Ising Hamiltonian, which can be cast into adequate quantum operators in a quantum computer \cite{Buonaiuto2023}. 
 \begin{figure}[h!]
 \centering 
-\includegraphics[width=0.45\textwidth]{VQE-Egger.pdf}
-  \caption{\label{fig:vqe} Variational Quantum Eigensolver (VQE) algorithm.}
+\includegraphics[width=0.5\textwidth]{VQE-Buonaiuto.pdf}
+  \caption{\label{fig:vqe} Variational Quantum Eigensolver (VQE) algorithm. Adapted from \cite{Buonaiuto2023}.}
 \end{figure}
 
-One of this algorithms is the Variational Quantum Eigensolver 
+
 
 
 \begin{figure*}[ht!]
