@@ -47,7 +47,7 @@
 
 \begin{document}
 
-\title{Quantum Algorithms for Portflolio Optimisation in Finance}
+\title{Quantum Algorithms for Portflolio Optimisation and Option pricing}
 
 \author{G. Balarezo}
 \thanks{e-mail: juan.balarezo@yachaytech.edu.ec}
@@ -198,9 +198,10 @@ This function of the underlying asset is called the \textbf{payoff function} and
 
 The purpose of option pricing is to estimate Eq. \ref{eq:8} at the expiration date and then, determine the \textbf{fair value}, which indicates the amount of money an 
 investor should pay to enter the option contract today, given the current market conditions. 
-The challenging part is to compute the expected value of the option payoff, which is usually done using Monte Carlo methods. In section \ref{sec:literature2} we will review how this problem can be solved using quantum algorithms.
+The challenging part is to compute the expected value of the option payoff, which is usually done using Monte Carlo methods. In section \ref{sec:literature2} we will discuss the quantum approach to 
+this problem.
 
-\subsubsection{Variational Quantum Algorithms}
+\subsection{Variational Quantum Algorithms}
 Variational Quantum Algorithms (VQAs) are hybrid quantum-classical algorithms that 
 are well suited for NISQ devices and allow us to get approximate solutions to optimisation and combinatorial problems efficiently \cite{Cerezo2021}. This algorithms rely on the fact that we can, in 
 principle, reformulate any optimisation problem as a QUBO problem \cite{Glover2019}.  
@@ -219,15 +220,44 @@ The starting point is to define a cost function
   \label{eq:9}
   C(\boldsymbol{\theta}) =\langle\psi(\boldsymbol{\theta})|H|\psi(\boldsymbol{\theta})\rangle
 \end{equation}
-where $H$ is the Hamiltonian of our problem, $\boldsymbol{\theta}$ is a set of trainable parameters, and a trial state $|\psi(\boldsymbol{\theta})\rangle = U(\boldsymbol{\theta}) |0\rangle ^{\otimes n}$ for some ansatz $U(\boldsymbol{\theta})$ 
-
-
+where $H$ is the Hamiltonian of our problem, that can be written as the weighted sum of Pauli operators \cite{Tilly2022}, such
 \begin{figure*}[ht!]
   \begin{center} 
   \includegraphics[width=0.85\textwidth]{QAOA-Blekos.pdf}
-  \caption{\label{fig:qaoa} Quantum Approximate Optimisation Algorithm (QAOA) algorithm. Adapted from \cite{Blekos2024}.}
+  \caption{\label{fig:qaoa} Quantum Approximate Optimisation Algorithm (QAOA). Adapted from \cite{Blekos2024}.}
   \end{center}
 \end{figure*}
+that: 
+\begin{equation}
+  \label{eq:10}
+  \mathcal{H} = \sum_{i} c_i P_i
+\end{equation}
+where $P_i \in \{I, X, Y, Z\}^{\otimes N}$ are called Pauli strings and $N$ is the number of qubits, and $c_i$ are the coefficients of the Pauli strings.  Additionally, $\boldsymbol{\theta}$ is a set of trainable parameters for some trial state $|\psi(\boldsymbol{\theta})\rangle = U(\boldsymbol{\theta}) |0\rangle ^{\otimes n}$. So, Eq. \ref{eq:9} becomes:
+\begin{equation}
+  \label{eq:11}
+  C(\boldsymbol{\theta}) =\sum_i c_i \langle \boldsymbol{0}|U(\boldsymbol{\theta})^\dagger P_i U(\boldsymbol{\theta})|\boldsymbol{0}\rangle
+\end{equation}
+for some ansatz $U(\boldsymbol{\theta})$, that can be written as
+\begin{equation}
+  \label{eq:12}
+  U(\boldsymbol{\theta}) = \prod_{k=1}^{p} e^{-i\theta_k \mathcal{H}_k}
+\end{equation}
+where $\mathcal{H}_k$ are the terms of the Hamiltonian $\mathcal{H}$  and $p$ determines the precision of the approximation \cite{Cerezo2021}.
+
+Therefore, the VQE consists of classical algorithm that uses a quantum algorithm as a subroutine. We first initialise the state 
+$|\psi(\boldsymbol{\theta})\rangle$ with some initial parameters $\boldsymbol{\theta}$, then we measure Eq. \ref{eq:11} and use a classical optimisation algorithm to update 
+the parameters $\boldsymbol{\theta}$ until we reach a minimum value of $C(\boldsymbol{\theta})$.
+
+The variational principle ensures that at some point the VQE algorithm will converge to:
+\begin{equation}
+  \label{eq:13}
+  E_0 \leq \frac{\langle \psi(\boldsymbol{\theta})|\mathcal{H}|\psi(\boldsymbol{\theta})\rangle}{\langle \psi(\boldsymbol{\theta})|\psi(\boldsymbol{\theta})\rangle}
+\end{equation}
+where $E_0$ is the ground state energy of the Hamiltonian $\mathcal{H}$ and $|\psi(\boldsymbol{\theta})\rangle$ is some trial state.
+
+In a similar fashion, the Quantum Approximate Optimisation Algorithm (QAOA) is another VQA that was first 
+conceived as 
+
 
 \subsubsection{Quantum Amplitude Estimation}
 
