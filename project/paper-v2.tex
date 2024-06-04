@@ -136,16 +136,19 @@ Then, the first step is to obtain a list $P$ of current prices $P_i$  of the ass
   \label{eq:1}
   P_i = p_i(T)
 \end{equation}
+
 In addition, the historical returns of the assets between time $t-1$ and $t$ are calculated as:
 \begin{equation}
   \label{eq:2}
   r_i(t) = \frac{p_i(t) - p_i(t-1)}{p_i(t-1)}
 \end{equation}
+
 But for inference purposes, we must consider the expected return of the assets. So, given the historical returns, we can calculate the expected return of the assets as:
 \begin{equation}
   \label{eq:3}
   \mu_i = \frac{1}{T} \sum_{t=1}^{T} r_i(t)
 \end{equation}
+
 The variance of the returns of each asset and the covariance between returns of different assets over the historical period are given by:
 \begin{equation}
   \label{eq:4}
@@ -155,6 +158,7 @@ The variance of the returns of each asset and the covariance between returns of 
   \label{eq:5}
   \sigma_{ij} = \frac{1}{T-1} \sum_{t=1}^{T} (r_i(t) - \mu_i)(r_j(t) - \mu_j)
 \end{equation}
+
 A set of investments $x_i$ (given as a fraction of the total budget or number of asset units) allocated for each $i$th considered asset, 
 is then defined. Therefore, an optimal method for asset allocation aims to maximise the portfolio return 
 $\mu^\text{T} x$ while minimising risk, defined as the portfolio variance $x^\text{T}\Sigma x$, where $\mu$ is the vector of expected returns for each asset $i$ computed by Eq. \ref{eq:3}, $\Sigma$ is the covariance matrix calculate by Eq. \ref{eq:4} and Eq. \ref{eq:5}, and $x$ is the vector 
@@ -191,12 +195,12 @@ This function of the underlying asset is called the \textbf{payoff function} and
   \label{eq:8}
   \text{Payoff} = \max(S - E, 0)
 \end{equation}
-The purpose of option pricing is to estimate the option payoff at the expiration date and then, determine the \textbf{fair value}, which indicates the amount of money an 
+
+The purpose of option pricing is to estimate Eq. \ref{eq:8} at the expiration date and then, determine the \textbf{fair value}, which indicates the amount of money an 
 investor should pay to enter the option contract today, given the current market conditions. 
 The challenging part is to compute the expected value of the option payoff, which is usually done using Monte Carlo methods. In section \ref{sec:literature2} we will review how this problem can be solved using quantum algorithms.
 
 \subsubsection{Variational Quantum Algorithms}
-
 Variational Quantum Algorithms (VQAs) are hybrid quantum-classical algorithms that 
 are well suited for NISQ devices and allow us to get approximate solutions to optimisation and combinatorial problems efficiently \cite{Cerezo2021}. This algorithms rely on the fact that we can, in 
 principle, reformulate any optimisation problem as a QUBO problem \cite{Glover2019}.  
@@ -208,13 +212,20 @@ QUBO problems can not directly be cast into a quantum computer, but they share a
   \caption{\label{fig:vqe} Variational Quantum Eigensolver (VQE) algorithm. Adapted from \cite{Buonaiuto2023}.}
 \end{figure}
 
+One of the VQAs used for portfolio optimisation is the Variational Quantum Eigensolver (VQE) algorithm (see Fig. \ref{fig:vqe}). The aim of the VQE algorithm is to find an approximate value for the ground state energy of a given Hamiltonian.  
 
+The starting point is to define a cost function
+\begin{equation}
+  \label{eq:9}
+  C(\boldsymbol{\theta}) =\langle\psi(\boldsymbol{\theta})|H|\psi(\boldsymbol{\theta})\rangle
+\end{equation}
+where $H$ is the Hamiltonian of our problem, $\boldsymbol{\theta}$ is a set of trainable parameters, and a trial state $|\psi(\boldsymbol{\theta})\rangle = U(\boldsymbol{\theta}) |0\rangle ^{\otimes n}$ for some ansatz $U(\boldsymbol{\theta})$ 
 
 
 \begin{figure*}[ht!]
   \begin{center} 
-  \includegraphics[width=\textwidth]{QAOA-Blekos.pdf}
-  \caption{\label{fig:qaoa} Quantum Approximate Optimisation Algorithm (QAOA) algorithm.}
+  \includegraphics[width=0.85\textwidth]{QAOA-Blekos.pdf}
+  \caption{\label{fig:qaoa} Quantum Approximate Optimisation Algorithm (QAOA) algorithm. Adapted from \cite{Blekos2024}.}
   \end{center}
 \end{figure*}
 
