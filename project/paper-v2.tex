@@ -256,17 +256,36 @@ The variational principle ensures that at some point the VQE algorithm will conv
 where $E_0$ is the ground state energy of the Hamiltonian $\mathcal{H}$ and $|\psi(\boldsymbol{\theta})\rangle$ is some trial state.
 
 In a similar fashion, the Quantum Approximate Optimisation Algorithm (QAOA) is another VQA that was first 
-conceived by Farhi et al. \cite{Farhi2014} for combinatorial optimisation problems (e.g. Max-Cut).
+proposed by Farhi et al. \cite{Farhi2014} for combinatorial optimisation problems (e.g. Max-Cut).
 
-Mathematically, we can see the combinatorial optimisation problem as a graph with $m$ edges and $n$ vertices. Then, define a bitstring $x = $ 
-
+Mathematically, we can see the combinatorial optimisation problem as a graph with $m$ edges and $n$ vertices (see Fig. \ref{fig:combinatorial}). Then, define a binary string $x = \{x_1,\cdots, x_n\}$ with $x_i \in \{0, 1\}$. 
 \begin{figure}[h!]
 \centering 
 \includegraphics[width=0.35\textwidth]{combinatorial-problem.pdf}
-  \caption{\label{fig:combinatorial} A graph representation of a combinatorial optimisation problem. Adapted from \cite{Baker2022}.} 
+  \caption{\label{fig:combinatorial} A graph representation of a combinatorial optimisation problem with $n =4$ vertices and $m=6$ edges. Adapted from \cite{Baker2022}.} 
 \end{figure}
+The goal is to find the binary string that maximises the objective function: 
+\begin{equation}
+  \label{eq:14}
+  C(x) = \sum_{i,j=1}^{n} \Sigma_{i,j} x_i (1-x_j)
+\end{equation}
 
-\subsubsection{Quantum Amplitude Estimation}
+In Fig. \ref{fig:qaoa} we show the general structure of the QAOA. First, it initialise $n$ states as a uniform superposition
+\begin{equation}
+  \label{eq:15}
+  |+\rangle^{\otimes n} = \frac{1}{\sqrt{2^n}} \sum_{x} |x\rangle 
+\end{equation}
+and then, it applies a sequence of $p$ anzates $U(\boldsymbol{\gamma}, \boldsymbol{\beta})$  that are defined as 
+\begin{equation}
+  \label{eq:16}
+  U(\boldsymbol{\gamma}, \boldsymbol{\beta}) = \prod_{k=1}^{p} e^{-i\beta_k \mathcal{H}_M} e^{-i\gamma_k \mathcal{H}_C}
+\end{equation}
+where $\mathcal{H}_M$ and $\mathcal{H}_C$ are the mixing and cost Hamiltonians, respectively. The cost Hamiltonian $\mathcal{H}_C$ encodes the cost function of the problem and the mixing Hamiltonian helps guide the optimisation in Hilbert space towards ground state of $\mathcal{H}_C$ \cite{Moll2018}. Similar to the VQE, the cost Hamiltonian is defined by Eq. \ref{eq:10} and the mixer Hamiltonian 
+is defined as $\mathcal{H}_M = -\sum_{i} \sigma_i^x$ \cite{Moll2018}.
+
+After applying the anzates $p$ times, we measure the expectation value of the cost Hamiltonian $C(\boldsymbol{\gamma},\boldsymbol{\beta}) = \langle \psi(\boldsymbol{\gamma}, \boldsymbol{\beta})|\mathcal{H}_C|\psi(\boldsymbol{\gamma},\boldsymbol{\beta})\rangle$ and use a classical optimisation algorithm to update the parameters $\boldsymbol{\gamma}$ and $\boldsymbol{\beta}$ until we reach a minimum value of $C(\boldsymbol{\gamma},\boldsymbol{\beta})$.
+
+\subsection{Quantum Amplitude Estimation}
 
 
 \section{Portfolio Optimisation}\label{sec:literature1}
