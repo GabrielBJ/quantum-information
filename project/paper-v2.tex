@@ -256,8 +256,15 @@ The variational principle ensures that at some point the VQE algorithm will conv
 where $E_0$ is the ground state energy of the Hamiltonian $\mathcal{H}$ and $|\psi(\boldsymbol{\theta})\rangle$ is some trial state.
 
 In a similar fashion, the Quantum Approximate Optimisation Algorithm (QAOA) is another VQA that was first 
-conceived as 
+conceived by Farhi et al. \cite{Farhi2014} for combinatorial optimisation problems (e.g. Max-Cut).
 
+Mathematically, we can see the combinatorial optimisation problem as a graph with $m$ edges and $n$ vertices. Then, define a bitstring $x = $ 
+
+\begin{figure}[h!]
+\centering 
+\includegraphics[width=0.35\textwidth]{combinatorial-problem.pdf}
+  \caption{\label{fig:combinatorial} A graph representation of a combinatorial optimisation problem. Adapted from \cite{Baker2022}.} 
+\end{figure}
 
 \subsubsection{Quantum Amplitude Estimation}
 
