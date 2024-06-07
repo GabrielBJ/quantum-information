@@ -72,9 +72,9 @@ computational cost that coupled with growing complexity of the financial markets
 an attractive option for financial institutions. 
 
 In the Modern Portfolio Theory (MPT) proposed by Markowistz \cite{Markowitz1952}, the goal of portfolio optimisation is to find the best combination of assets that maximises the return for a given level of risk and some constraints. This is a highly constrained quadratic optimisation problem, known to be NP-Hard, which can be formulated in several ways depending on the conditions of the 
-investor \cite{Herman2022}. Machine Learning based models (ML) such as the one proposed by Mazumdar et al. \cite{Mazumdar2020} are widely used for minimising risk contributors and maximising asset diversification.
+investor \cite{Herman2022}. Monte Carlo based models (MC) such as the one proposed by Shadabfar and Cheng \cite{Shadabfar2020} are widely used for minimising risk contributors and maximising asset diversification.
 
-In particular, quantum approaches to portfolio optimisation are gaining significant attention \cite{Quarterly2020}. In 2019 Kerenidis, Prakash and Szilágyi proposed a quantum algorithm for the constrained portfolio optimisation problem. Based on an interior point method, this algorithm reduces the optimisation problem to a second order cone program (SOCP). The authors suggest that their algorithm could achieve a $\mathcal{O} (n)$ speedup over  its classical counterpart.
+In particular, quantum approaches to portfolio optimisation are gaining significant attention \cite{Quarterly2020}. In 2019 Kerenidis, Prakash and Szilágyi \cite{Kerenidis2019},  proposed a quantum algorithm for the constrained portfolio optimisation problem. Based on an interior point method, this algorithm reduces the optimisation problem to a second order cone program (SOCP). The authors suggest that their algorithm could achieve a $\mathcal{O} (n)$ speedup over  its classical counterpart.
 
 Other approaches such as the variational quantum algorithms (VQAs) \cite{Yuan2019, Cerezo2021, McClean2016, Amaro2022} work by reformulating the portfolio optimisation problem as a 
 quadratic unconstrained binary optimisation (QUBO) problem. Glover et al. \cite{Glover2019} covers some methods to reformulate any optimisation problem as a QUBO problem, and Date et al. \cite{Date2019} proposed an algorithm that allows the efficient embedding of a QUBO problem in a quantum annealer.  Using these concepts, Variational Quantum 
@@ -280,28 +280,75 @@ and then, it applies a sequence of $p$ anzates $U(\boldsymbol{\gamma}, \boldsymb
   \label{eq:16}
   U(\boldsymbol{\gamma}, \boldsymbol{\beta}) = \prod_{k=1}^{p} e^{-i\beta_k \mathcal{H}_M} e^{-i\gamma_k \mathcal{H}_C}
 \end{equation}
-where $\mathcal{H}_M$ and $\mathcal{H}_C$ are the mixing and cost Hamiltonians, respectively. The cost Hamiltonian $\mathcal{H}_C$ encodes the cost function of the problem and the mixing Hamiltonian helps guide the optimisation in Hilbert space towards ground state of $\mathcal{H}_C$ \cite{Moll2018}. Similar to the VQE, the cost Hamiltonian is defined by Eq. \ref{eq:10} and the mixer Hamiltonian 
+where $\mathcal{H}_M$ and $\mathcal{H}_C$ are the mixing and cost Hamiltonians, respectively. $\mathcal{H}_C$ encodes the cost function of the problem and $\mathcal{H}_M$ helps guide the optimisation in Hilbert space towards ground state of $\mathcal{H}_C$ \cite{Moll2018}. Similar to the VQE, $\mathcal{H}_C$ can de defined by Eq. \ref{eq:10} and the mixer Hamiltonian 
 is defined as $\mathcal{H}_M = -\sum_{i} \sigma_i^x$ \cite{Moll2018}.
 
 After applying the anzates $p$ times, we measure the expectation value of the cost Hamiltonian $C(\boldsymbol{\gamma},\boldsymbol{\beta}) = \langle \psi(\boldsymbol{\gamma}, \boldsymbol{\beta})|\mathcal{H}_C|\psi(\boldsymbol{\gamma},\boldsymbol{\beta})\rangle$ and use a classical optimisation algorithm to update the parameters $\boldsymbol{\gamma}$ and $\boldsymbol{\beta}$ until we reach a minimum value of $C(\boldsymbol{\gamma},\boldsymbol{\beta})$.
 
 \subsection{Quantum Amplitude Estimation}
 
+Quantum Amplitude Estimation (QAE) is an algorithm that can estimate a parameter $a$ with a convergence rate of $\mathcal{O}(1/M)$, where $M$ is the number of samples, which corresponds to a quadratic speedup compared to classical methods (i.e Monte Carlo) which requires $\mathcal{O}(1/\sqrt{M})$ \cite{Egger2020}.  QAE is based on a unitary operator $\mathcal{A}$  that acts on $(n+1)$ qubits such that 
+\begin{equation}
+  \label{eq:17}
+  \mathcal{A}|0\rangle_{n+1} = \sqrt{1-a}|\psi_0\rangle_n|0\rangle + \sqrt{a}|\psi_1\rangle_n|1\rangle
+\end{equation}
+for some normalised states $|\psi_0\rangle_n$ and $|\psi_1\rangle_n$, where $a \in [0,1]$ is unknown \cite{Stamatopoulos2020}. We can then, 
+infer the value of $a$ by performing multiple measurements on $|\Psi\rangle$ and obtaining the ratio of the good state. This method does not represent any advantage with respect to the classical method since the number of queries is exactly the same.  
 
-\section{Portfolio Optimisation}\label{sec:literature1}
+Therefore, QAE is used along with the amplitude amplification algorithm to amplify the probability of measuring the good state. We achieve that by applying the following operator: 
+\begin{equation}
+  \label{eq:18}
+  \mathcal{Q} = -\mathcal{A} \mathcal{S}_0 \mathcal{A} \mathcal{S}_{\chi}
+\end{equation}
+where $\mathcal{S}_0$ is the inversion about the mean operator and $\mathcal{S}_{\chi}$ is the oracle operator that flips the sign of the good state \cite{Suzuki2020}.
 
+By defining $\theta_a \in [0, 2\pi]$  so that $a = \sin^2(\theta_a)$, and applying repeatedly $\mathcal{Q}$ for $m$ times on $|\Psi\rangle$  results in
+\begin{equation}
+  \label{eq:19}
+\begin{aligned}
+  \mathcal{Q}^m |\Psi\rangle  &= \sin((2m + 1)\theta_a)|\psi_1\rangle_n|1\rangle\\
+  & + \cos((2m + 1)\theta_a)|\psi_0\rangle_n|0\rangle 
+\end{aligned}
+\end{equation}
+once measured we can apply a maximum likelihood estimation to infer the value of $a$ \cite{Suzuki2020}.
 
+\section{Classical Approaches}\label{sec:literature1}
 
-\subsection{Classical Portfolio Optimisation}
+In this section we review the main classical approaches to portfolio optimisation and option pricing. 
+This section is not intended to be an detailed review on the topic, but rather to provide a point of comparison with the quantum approaches in Sec. \ref{sec:literature2}
 
-\subsection{Quantum Portfolio Optimisation}
+\subsection{Portfolio Optimisation}
 
+Classical approaches for portfolio optimisation are based on the MVPO (discussed in Sec. \ref{sec:background}).  
+Shadabfar and  Cheng \cite{Shadabfar2020} proposed a probabilistic method for portfolio optimisation using a hybrid Monte Carlo simulation and Markowitz model. They use the cost function defined by Eq. 
+\ref{eq:6}, and apply a Monte Carlo to generate multiple random samples of the asset allocations. Then, using the Markowitz optimisation model they computed the optimum values of return and risk for each portfolio. 
+\begin{figure}[h!]
+\centering 
+\includegraphics[width=0.5\textwidth]{return-risk-error.pdf}
+  \caption{\label{fig:monte-carlo} Convergence of the probabilistic method proposed by Shadabfar and Cheng. The convergence of the return and risk probability depends on the number of random samples considered. Adapted from \cite{Shadabfar2020}.} 
+\end{figure}
 
-\section{Option Pricing}\label{sec:literature2}
+As shown in Fig. \ref{fig:monte-carlo}, they found that the convergence of their method is dependent on the number of samples used in the Monte Carlo method. Additionally, they demonstrated that the model results 
+are roubust to errors in the model's input data, indicating the stability and reliability of their method.
 
-\subsection{Classical Option Pricing}
+\subsection{Option Pricing}
 
-\subsection{Quantum Option Pricing}
+ The most common classical approach to option pricing are the Monte Carlo methods. In contrast to the Black-Scholes model, which can provide 
+ analytical solutions for very simplistic cases, Monte Carlo methods due to their random nature can model and capture the 
+ complex behaviour of the financial markets. 
+
+Stochastic differential equations (SDEs) are used to model the evolution of the underlying asset price. The most common SDE used for this task is the Geometric Brownian Motion (GBM) model, which is given by:
+
+\begin{equation}
+  \label{eq:20}
+  S_{t+1} = S_t \exp\left(\left[\mu - \frac{1}{2}\sigma^2\right]\Delta t + \sigma \sqrt{\Delta t}Z_t\right)
+\end{equation}
+
+\section{Quantum Approaches}\label{sec:literature2}
+
+\subsection{Portfolio Optimisation}
+
+\subsection{Option Pricing}
 
 
 \section{Hardware Implementations}\label{sec:hardware}
