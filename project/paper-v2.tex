@@ -337,28 +337,94 @@ are roubust to errors in the model's input data, indicating the stability and re
  analytical solutions for very simplistic cases, Monte Carlo methods due to their random nature can model and capture the 
  complex behaviour of the financial markets. 
 
-Stochastic differential equations (SDEs) are used to model the evolution of the underlying asset price. The most common SDE used for this task is the Geometric Brownian Motion (GBM) model, which is given by:
-
+Stochastic differential equations (SDEs) are used to model the evolution of the underlying asset price. The most common SDE used for this task is the Geometric Brownian Motion (GBM) model \cite{Sood2019}, which is given by:
 \begin{equation}
   \label{eq:20}
   S_{t+1} = S_t \exp\left(\left[\mu - \frac{1}{2}\sigma^2\right]\Delta t + \sigma \sqrt{\Delta t}Z_t\right)
 \end{equation}
+where $S_t$ is the asset price at time $t$, $\mu$ is the expected return, $\sigma$ is the volatility, $\Delta t$ is the time step, and $Z_t$ is a standard normal random variable.
+
+The general idea of this method is to simulate the asset price evolution multiple times and calculate the payoff of the option at the expiration date (See Fig. \ref{fig:monte-carlo-option}). The expected value of the option price is then calculated as the average of the payoffs.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.5\textwidth]{monte-carlo-paths.pdf}
+  \caption{\label{fig:monte-carlo-option} Monte Carlo simulation of the option price for a maturity time $T =1$ (years). The option price is calculated as the average of the payoffs of the option at the expiration date. Adapted from \cite{Sood2019}.}
+\end{figure}
+
+In general, the estimation error goes as $\mathcal{O}(1/\sqrt{M})$, where $M$ is the number of samples used in the Monte Carlo simulation. Therefore, we need to find a balance between the estimation error and the time required to compute all the random samples. Although a simplified version of the Monte Carlo method is provided in this section, 
+this is the basis for more complex methods. 
 
 \section{Quantum Approaches}\label{sec:literature2}
-
+Having reviewed the classical approaches for both portfolio optimisation and option pricing, it is time to 
+introduce the quantum approaches to these problems. In this section we will review the implementations of the quantum algorithms discussed in Sec. \ref{sec:background} for these tasks.
 \subsection{Portfolio Optimisation}
+In 2023, Buonaiuto et al. \cite{Buonaiuto2023} published a paper where they implemented the VQE algorithm in multiple simulations and in real quantum computers. They used four assets (Apple, IBM, Netflix and Tesla) 
+historical data, and the MVPO model to state the optimisation problem. 
+\begin{figure}[h!]
+\centering 
+\includegraphics[width=0.45\textwidth]{data-paper.png}
+  \caption{\label{fig:data-set} Sample of the historical data of of the assets Apple, IBM, Netflix and Tesla used for the VQE implementation by 
+Biunaiuto et al. \cite{Buonaiuto2023}.}
+\end{figure}
+
+They mapped the MVPO problem into a QUBO problem (Eq. \ref{eq:21} and Eq. \ref{eq:22}), and then converted it into quantum operators using 
+the Ising Hamiltonian, as proposed by \cite{Tilly2022}.  Prices, returns, and covariance matrix of the assets were calculated using the historical data (see Fig. \ref{fig:data-set}). 
+\begin{equation}
+  \label{eq:21}
+  \max_{b} \mathcal{L}(b) =\max_{b}\left(\mu''^{T} b - qb^{T} \Sigma'' b - \lambda(P''^{T}b- 1)^2\right)
+\end{equation}
+\begin{equation}
+  \label{eq:22}
+  \mathcal{H} = \sum_{i} h_i Z_i + \sum_{i,j} J_{ij} Z_i\otimes Z_j + \lambda \left(\sum_{i}\pi_i Z_i -\beta\right)^2
+\end{equation}
+
+The total expendable budget was set to $B=2000$ for all the experiments, a risk aversion parameter $q=0.5$ was considered. The initial ansatz parameters were randomly selected between $[-\pi, \pi]$. A number of 200 epochs was set, and a penalty parameter $\lambda=10$  was chosen. Finally, the Coybla classical optimiser was used. 
+
+The results of the VQE implementation are shown in Fig. \ref{fig:results}. The results were contrasted with a classical solution. The Toronto, Kolkata and Auckland quantum computers performances perfectly match the classical result. Different ansatz were used for the different quantum computers. 
+\begin{figure*}[t!]
+\centering
+\includegraphics[width=.90\textwidth]{results-vqe.png}
+  \caption{\label{fig:results} Results of the VQE implementation by Buonaiuto et al. \cite{Buonaiuto2023}. The optimal asset allocation for the four assets considered is shown. Extracted from 
+  \cite{Buonaiuto2023}}
+\end{figure*}
 
 \subsection{Option Pricing}
+In 2020, Stamatopoulos et al. \cite{Stamatopoulos2020} published a work where they presented a methodology to price options and portfolios of options on a gate-based quantum computer using the QAE algorithm. They implemented their methodology using the IBM Q Tokyo quantum device. Among 
+the options covered in their work, they considered multi-asset options and path dependent options.
 
+They discussed the QAE implementation along with the quantum Fourier transform. In their work, they prove mathematically the potential speedup the QAE algorithm could provide compared to the classical Monte Carlo methods, which is in agreement with \cite{Woerner2019, Nakaji2020,Rebentrost2018, Rebentrost2022}. All these works suggest that the estimation error of QAE goes as $\mathcal{O}(1/M)$, whereas the classical Monte Carlo method provides an estimation error that scales as $\mathcal{O}(1/\sqrt{M})$, where $M$ is the number of samples.
 
-\section{Hardware Implementations}\label{sec:hardware}
+Instead of using the QFT, the approach proposed by Suzuki et al. \cite{Suzuki2020} and discussed in Sec. \ref{sec:background} was considered.
+Results of the QAE implementation are shown in Fig. \ref{fig:results-qae}. The authors point out the good performance of this algorithm compared to the classical MC.
 
+Furthermore, they used their methodology to price a portfolio of options. They used these results to experimentally prove the speedup of the QAE algorithm (see Fig. \ref{fig:portfolio-option}).
 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.45\textwidth]{option-price-estimation.pdf}
+  \caption{\label{fig:results-qae} Estimated option price using QAE. $S_0 = 2$, $ \sigma = 10\%$, $r = 4\%$ and $T=300/365$ were used. The red dotted line is the value computed using classical Monte Carlo, and the blue bars represent the estimated option price using QAE after 100000 samples. Adapted  from \cite{Stamatopoulos2020}.}
+\end{figure}
 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.45\textwidth]{estimation-error.pdf}
+  \caption{\label{fig:portfolio-option} 
+Convergence of the estimation error of the option price for a portfolio of options is shown. The yellow dotted line shows the error convergence for the QAE, whereas the blue dashed line indicates the error convergence for the classical Monte Carlo. Adapted  from \cite{Stamatopoulos2020}.}
+\end{figure}
 
 \section{Discussion and Conclusion}\label{sec:discussion}
+In this work we have reviewed the quantum algorithms proposed for financial applications. Algorithms such as the VQAs and QAE have demonstrated a potential application for portfolio optimisation and option pricing problems. 
 
+VQAs have been successfully implemented for optimisation problems. The results show that the performance of these algorithms is highly dependent on the ansatz structure and hardware topology. Nevertheless, the performance of the VQAs is formidable even when no error mitigation protocol is considered, making them a good candidate for exploiting the computational power that NISQi devices offer to date.  
 
+On the other hand, QAE has been experimentally proven to provide a quadratic speedup over the classical Monte Carlo methods. Applied to 
+option pricing, this algorithm has the potential to provide a significant benefit in terms of time and computational 
+resources.
+
+Finally, although the results of the quantum algorithms applied to financial applications are promising, 
+hardware limitations must be addressed as well as the development of error mitigation protocols. These  implementation results 
+show the potential of quantum algorithms beyond the theoretical framework, and pave the way for future research and 
+applications in the financial industry.
 
 \FloatBarrier
 
