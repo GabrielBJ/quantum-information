@@ -55,7 +55,7 @@
 
 
 \begin{abstract}
-Quantum computing has the promise to address computational problems that are considered intractable with our classical computational models. Nevertheless, due to the current limitations of the available quantum hardware, we are still years away from achieving a universal fault-tolerant quantum computer. In the interim, the development of quantum algorithms for specific problems and their implementation on near-term quantum devices is a promising approach. In this work, we review the most promising quantum algorithms for financial applications, focusing on Portfolio Optimisation and Option Pricing. We describe the ideas behind important quantum algorithms such as Variational Quantum Algorithms (VQAs) and Quantum Amplitude Estimation (QAE) and their theoretical performance. We provide an overview of the hardware available for their implementation and discuss the results 
+Quantum computing has the promise to address computational problems that are considered intractable with our classical computational models. Nevertheless, due to the current limitations of the available quantum hardware, we are still years away from achieving a universal fault-tolerant quantum computer. In the interim, the development of quantum algorithms for specific problems and their implementation on near-term quantum devices is a promising approach. In this work, we review the most promising quantum algorithms for financial applications, focusing on Portfolio Optimisation and Option Pricing. We describe the ideas behind important quantum algorithms such as Variational Quantum Algorithms (VQAs) and Quantum Amplitude Estimation (QAE) and their theoretical performance. We provide an overview of the hardware  implementations and discuss the results 
 obtained by some study cases, comparing them with their classical counterparts. Finally, we discuss the future prospects of these algorithms in the financial industry.
   \\
   \textbf{Keywords:} Quantum algorithms, Quantum approximate optimization algorithm, Quantum amplitude estimation, Portfolio optimisation, Quantum computing.
@@ -114,7 +114,7 @@ The aim of this work is to provide a review of the quantum algorithms for specif
 In Sec. \ref{sec:background} we introduce necessary concepts in finance and quantum algorithms. Then, in Sec. \ref{sec:literature1} and Sec. \ref{sec:literature2}  we present a review of relevant literature on quantum algorithms proposed for the aforementioned financial applications. We also 
   introduce the classical methods used for these tasks and compare them with their quantum counterparts.
 
-In Sec. \ref{sec:hardware} we provide an overview of the hardware implementations of these algorithms. Finally, Sec. \ref{sec:discussion} concludes this work and discusses the future prospects of quantum algorithms in the financial industry. 
+ Finally, Sec. \ref{sec:discussion} concludes this work and discusses the future prospects of quantum algorithms in the financial industry. 
 
 It is worth mentioning that important surveys have been published on the topic of quantum computing in finance in recent years. Among these, we highlight the works of Orús et al. \cite{Orus2019}, Egger et al. \cite{Egger2020a}, Albareti et al. \cite{Albareti2022}, Herman et al. \cite{Herman2022}, and Herman et al. \cite{Herman2023}, which have been instrumental in the development of this work. We refer the interested readers to these works for a more comprehensive overview of the field.
 
@@ -176,7 +176,8 @@ $x_i$ values (only buying) must be considered. Therefore, in the general case, t
   \text{s.t.} & \quad \sum_{i=1}^{N} x_i = 1 
 \end{aligned}
 \end{equation}
-In section \ref{sec:literature1} we will review how this problem can be mapped into a QUBO problem and solved using quantum algorithms.
+Although analytical solutions exist for particular cases, the general problem is unsolvable efficiently with classical methods, and 
+heuristic methods such as Monte Carlo simulations are used to find approximate solutions \cite{Shadabfar2020}.
 
 \subsubsection{Option Pricing}
 An option is a financial instrument that gives the holder the opportunity but not the obligation to buy or sell the  \textbf{underlying asset} at an agreed-upon price (\textbf{strike price}) at a specified time in the future (\textbf{expiration date}) \cite{Wilmott2007}. There are many kind of options, 
@@ -198,7 +199,7 @@ This function of the underlying asset is called the \textbf{payoff function} and
 
 The purpose of option pricing is to estimate Eq. \ref{eq:8} at the expiration date and then, determine the \textbf{fair value}, which indicates the amount of money an 
 investor should pay to enter the option contract today, given the current market conditions. 
-The challenging part is to compute the expected value of the option payoff, which is usually done using Monte Carlo methods. In section \ref{sec:literature2} we will discuss the quantum approach to 
+The challenging part is to compute the expected value of the option payoff, which is usually done using Monte Carlo methods \cite{Sood2019}. In section \ref{sec:literature2} we will discuss the quantum approach to 
 this problem.
 
 \subsection{Variational Quantum Algorithms}
@@ -232,7 +233,7 @@ that:
   \label{eq:10}
   \mathcal{H} = \sum_{i} c_i P_i
 \end{equation}
-where $P_i \in \{I, X, Y, Z\}^{\otimes N}$ are called Pauli strings and $N$ is the number of qubits, and $c_i$ are the coefficients of the Pauli strings.  Additionally, $\boldsymbol{\theta}$ is a set of trainable parameters for some trial state $|\psi(\boldsymbol{\theta})\rangle = U(\boldsymbol{\theta}) |0\rangle ^{\otimes n}$. So, Eq. \ref{eq:9} becomes:
+where $P_i \in \{I, X, Y, Z\}^{\otimes N}$ are called Pauli strings and $N$ is the number of qubits, and $c_i$ are the coefficients of the Pauli strings.  Additionally, $\boldsymbol{\theta}$ is a set of trainable parameters for some trial state $|\psi(\boldsymbol{\theta})\rangle = U(\boldsymbol{\theta}) |0\rangle ^{\otimes n}$. Therefore, Eq. \ref{eq:9} becomes:
 \begin{equation}
   \label{eq:11}
   C(\boldsymbol{\theta}) =\sum_i c_i \langle \boldsymbol{0}|U(\boldsymbol{\theta})^\dagger P_i U(\boldsymbol{\theta})|\boldsymbol{0}\rangle
@@ -248,7 +249,7 @@ Therefore, the VQE consists of classical algorithm that uses a quantum algorithm
 $|\psi(\boldsymbol{\theta})\rangle$ with some initial parameters $\boldsymbol{\theta}$, then we measure Eq. \ref{eq:11} and use a classical optimisation algorithm to update 
 the parameters $\boldsymbol{\theta}$ until we reach a minimum value of $C(\boldsymbol{\theta})$.
 
-The variational principle ensures that at some point the VQE algorithm will converge to:
+The variational principle ensures that after enough iterations the VQE algorithm will converge to:
 \begin{equation}
   \label{eq:13}
   E_0 \leq \frac{\langle \psi(\boldsymbol{\theta})|\mathcal{H}|\psi(\boldsymbol{\theta})\rangle}{\langle \psi(\boldsymbol{\theta})|\psi(\boldsymbol{\theta})\rangle}
@@ -397,7 +398,7 @@ They discussed the QAE implementation along with the quantum Fourier transform. 
 Instead of using the QFT, the approach proposed by Suzuki et al. \cite{Suzuki2020} and discussed in Sec. \ref{sec:background} was considered.
 Results of the QAE implementation are shown in Fig. \ref{fig:results-qae}. The authors point out the good performance of this algorithm compared to the classical MC.
 
-Furthermore, they used their methodology to price a portfolio of options. They used these results to experimentally prove the speedup of the QAE algorithm (see Fig. \ref{fig:portfolio-option}).
+Furthermore, they used their methodology to price a portfolio of options, and using these results, they experimentally proved the speedup of the QAE algorithm (see Fig. \ref{fig:portfolio-option}).
 
 \begin{figure}[h!]
 \centering
@@ -415,7 +416,7 @@ Convergence of the estimation error of the option price for a portfolio of optio
 \section{Discussion and Conclusion}\label{sec:discussion}
 In this work we have reviewed the quantum algorithms proposed for financial applications. Algorithms such as the VQAs and QAE have demonstrated a potential application for portfolio optimisation and option pricing problems. 
 
-VQAs have been successfully implemented for optimisation problems. The results show that the performance of these algorithms is highly dependent on the ansatz structure and hardware topology. Nevertheless, the performance of the VQAs is formidable even when no error mitigation protocol is considered, making them a good candidate for exploiting the computational power that NISQi devices offer to date.  
+VQAs have been successfully implemented for optimisation problems. The results show that the performance of these algorithms is highly dependent on the ansatz structure and hardware topology. Nevertheless, the performance of the VQAs is formidable even when no error mitigation protocol is considered, making them a good candidate for exploiting the computational power that NISQ devices offer to date.  
 
 On the other hand, QAE has been experimentally proven to provide a quadratic speedup over the classical Monte Carlo methods. Applied to 
 option pricing, this algorithm has the potential to provide a significant benefit in terms of time and computational 
@@ -428,6 +429,6 @@ applications in the financial industry.
 
 \FloatBarrier
 
-\bibliography{/home/pacman/Documents/git-repositories/quantum-computing/lecture-notes/bibliography.bib}
+\bibliography{./bibliography.bib}
 
 \end{document} 
